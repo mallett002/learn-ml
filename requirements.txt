@@ -1,0 +1,5 @@
+matplotlib==3.9.2
+numpy==1.26.1
+scikit-learn
+tensorflow
+pandas
