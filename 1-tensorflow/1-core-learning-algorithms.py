@@ -46,5 +46,22 @@ survived_eval = dfeval.pop('survived')
 # dftrain.sex.value_counts().plot(kind='barh')
 # dftrain['class'].value_counts().plot(kind='barh')
 # group by sex, average survival per sex
-pd.concat([dftrain, survived_train], axis=1).groupby('sex').survived.mean().plot(kind='barh').set_xlabel('% survive')
-plt.show()
+# pd.concat([dftrain, survived_train], axis=1).groupby('sex').survived.mean().plot(kind='barh').set_xlabel('% survive')
+# plt.show()
+
+# Some pandas learning (not related to the Titanic session):
+# data = pd.Series([10, 20, 30, 40], index=['a', 'b', 'c', 'd'])
+# print(data)
+# print()
+# 
+# data = {
+#     'Name': ['Alice', 'Bob', 'Charlie'],
+#     'Age': [25, 30, 35],
+#     'Score': [85.5, 90.3, 95.1]
+# }
+# df = pd.DataFrame(data)
+# # print(df[ ['Name', 'Score'] ])
+# # print(df.iloc[0])
+# print(df.loc[0])
+
+
