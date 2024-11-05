@@ -49,6 +49,32 @@ survived_eval = dfeval.pop('survived')
 # pd.concat([dftrain, survived_train], axis=1).groupby('sex').survived.mean().plot(kind='barh').set_xlabel('% survive')
 # plt.show()
 
+# Encoding (adding numeric data) Categorical data (ex: sex "male", "female" --> 1, 2)
+CATEGORICAL_COLUMNS = ['sex', 'n_siblings_spouses', 'parch', 'class', 'deck', 'embark_town', 'alone']
+NUMERIC_COLUMNS = ['age', 'fare']
+
+feature_columns = []
+
+for feature_name in CATEGORICAL_COLUMNS:
+    vocab = dftrain[feature_name].unique() # gets a list of all unique values from given feature column (ex: ['male', 'female'])
+    feature_columns.append(tf.feature_column.categorical_column_with_vocabulary_list(feature_name, vocab))
+
+for feature_name in NUMERIC_COLUMNS:
+    feature_columns.append(tf.feature_column.numeric_column(feature_name, dtype=tf.float32))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Some pandas learning (not related to the Titanic session):
 # data = pd.Series([10, 20, 30, 40], index=['a', 'b', 'c', 'd'])
 # print(data)
