@@ -63,10 +63,36 @@ for feature_name in NUMERIC_COLUMNS:
     feature_columns.append(tf.feature_column.numeric_column(feature_name, dtype=tf.float32))
 
 
+# Train the model: feed the model data
+# Feed it in batches, according to the number of epochs (amt of times model will see same data)
+# Input Function: defines how data will be broken into batches and epochs to be fed to model
+def make_input_fn(data_df, label_df, num_epochs = 10, shuffle = True, batch_size = 32):
+    def input_function():
+        ds = tf.data.Dataset.from_tensor_slices((dict(data_df), label_df))
 
+        if shuffle:
+            ds = ds.shuffle(1000)
 
+        ds = ds.batch(batch_size).repeat(num_epochs)
 
+        return ds
 
+    return input_function
+
+train_input_fn = make_input_fn(dftrain, survived_train)
+eval_input_fn = make_input_fn(dfeval, survived_eval, num_epochs = 1, shuffle = False)
+
+# Create the model:
+linear_est = tf.estimator.LinearClassifier(feature_columns = feature_columns)
+
+# Train the model:
+linear_est.train(train_input_fn)
+
+# Results from training
+result = linear_est.evaluate(eval_input_fn)
+
+clear_output() # clears console output
+print(result['accuracy'])
 
 
 
