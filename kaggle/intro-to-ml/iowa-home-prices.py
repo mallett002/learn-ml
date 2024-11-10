@@ -75,4 +75,5 @@ print(val_y.head())
 # Determines by how much are we off with the actual target
 val_mae = mean_absolute_error(val_y, val_predictions) # --> 29652.931506849316
 
+# Left off https://www.kaggle.com/code/dansbecker/underfitting-and-overfitting
 
