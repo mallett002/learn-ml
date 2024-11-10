@@ -73,6 +73,6 @@ print(val_y.head())
 # -------------------------------------------------------------------------------------------------------------
 # 7. Calculate Mean Absolute Error
 # Determines by how much are we off with the actual target
-val_mae = mean_absolute_error(val_y, val_predictions)
+val_mae = mean_absolute_error(val_y, val_predictions) # --> 29652.931506849316
 
 
