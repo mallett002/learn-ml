@@ -144,10 +144,46 @@ list(range(5, 0, -1)) # start at 5, stop at 0 exclusive, go back 1 each iteratio
 
 ##### Summary Functions ####
 reviews.describe() # see high level aggregate info
-reviews.taster_name.describe() # see aggregate info on taster_name
+reviews.taster_name.describe() # see aggregate info on taster_name (string value)
 reviews.points.mean() # see average of points allotted
 reviews.taster_name.unique() # see all the taster names
-print(reviews.taster_name.value_counts()) # See tasters and how often they occur in data
+reviews.taster_name.value_counts() # See tasters and how often they occur in data
+
+
+# map higher level function
+review_points_mean = reviews.points.mean()
+reviews.points.map(lambda p: p - review_points_mean)
+
+
+# apply - Similar to map, but transforms whole dataframe by calling custom dataframe on each row
+def remean_points(row):
+    row.points = row.points - review_points_mean
+    return row
+
+reviews.apply(remean_points, axis='columns') # axis='columns' transforms each row. axis='index' transforms each col
+
+
+# faster way to remean points column
+reviews.points - review_points_mean
+
+
+# combine country and region in dataset
+reviews.country + '-' + reviews.region_1
+
+
+# Get wine with highest points-to-price ratio
+bargain_idx = (reviews.points / reviews.price).idxmax() # gets the row label of the highest value
+bargain_wine = reviews.loc[bargain_idx, 'title']
+
+
+# create "descriptor_counts" - how many times each of the word fruity or tropical appears in description col
+n_trop = reviews.description.map(lambda d: 'tropical' in d).sum()
+n_fruity = reviews.description.map(lambda d: 'fruity' in d).sum()
+
+descriptor_counts = pd.Series([n_trop, n_fruity], index=['tropical', 'fruity'])
+
+# https://www.kaggle.com/code/williammallettjr/exercise-summary-functions-and-maps/edit
+# on 7.
 
 
 
@@ -155,34 +191,3 @@ print(reviews.taster_name.value_counts()) # See tasters and how often they occur
 
 
 
-
-
-
-
-
-
-
-# nums = [1,3,4,6,8,10,13], target = 13
-def two_sum(nums, target):
-    # pointers on the outside indexes
-    left = 0
-    right = len(nums) - 1
-
-    # if curr sum > target: all with current "right" will be greater. move "right" back one
-    # if curr < target: all with left will be smaller. move "left" up one
-
-    while left < right: # while they haven't met
-        sum = nums[left] + nums[right]
-
-        if sum == target:
-            return True
-
-        if sum > target:
-            right -= right;
-            continue;
-        
-        if sum < target:
-            left += left;
-            continue;
-    
-    return False
