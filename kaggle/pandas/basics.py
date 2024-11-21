@@ -182,9 +182,21 @@ n_fruity = reviews.description.map(lambda d: 'fruity' in d).sum()
 
 descriptor_counts = pd.Series([n_trop, n_fruity], index=['tropical', 'fruity'])
 
-# https://www.kaggle.com/code/williammallettjr/exercise-summary-functions-and-maps/edit
-# on 7.
 
+# Create a series star_ratings with the number of stars corresponding to each review in the dataset.
+def apply_stars(row):
+    if row.country == 'Canada' or row.points >= 95:
+        return 3
+    elif row.points >= 85:
+        return 2
+
+    return 1
+
+# The answer:
+reviews_with_stars = reviews.apply(apply_stars, axis='columns')
+
+# Can add stars on the reviews DF like this now:
+reviews['stars'] = reviews_with_stars
 
 
 
