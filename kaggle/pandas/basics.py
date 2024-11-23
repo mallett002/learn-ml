@@ -203,3 +203,22 @@ reviews['stars'] = reviews_with_stars
 
 
 
+##### Grouping and Sorting ####
+reviews.points.value_counts()
+# does ths same:
+reviews.groupby('points').points.count()
+# ^^ Puts in groups by points, get's the points col and counts how many rows (# times appeared)
+
+reviews.groupby('points').price.min()
+
+# Select name of first wine reviewed for each winery in dataset
+first_wines = reviews.groupby('winery').apply(lambda df: df.title.iloc[0], include_groups=False)
+# ^^ include_groups=False removes 'winery from the df
+
+# Pick best wine by country and province
+reviews.loc[0] # --> first row
+reviews.points.idxmax() # --> gets the index of the row with most points
+best_wines_by_country_prov = reviews.groupby(['country', 'province']).apply(lambda df: df.loc[df.points.idxmax()], include_groups=False)
+print(best_wines_by_country_prov)
+
+# left off on agg
