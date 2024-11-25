@@ -219,6 +219,22 @@ first_wines = reviews.groupby('winery').apply(lambda df: df.title.iloc[0], inclu
 reviews.loc[0] # --> first row
 reviews.points.idxmax() # --> gets the index of the row with most points
 best_wines_by_country_prov = reviews.groupby(['country', 'province']).apply(lambda df: df.loc[df.points.idxmax()], include_groups=False)
-print(best_wines_by_country_prov)
 
-# left off on agg
+# agg: run several summary functions on DF simultaneously
+statistical_summary = reviews.groupby('country').price.agg([len, min, max])
+
+
+# Multi-indexes
+# has 2 row labels:
+countries_reviewed = reviews.groupby(['country', 'province']).description.agg([len])
+# convert back into regular index:
+# countries_reviewed.reset_index()
+
+# Sorting
+# countries_reviewed = countries_reviewed.reset_index()
+countries_reviewed = countries_reviewed.sort_values(by='len') # sort results asc
+countries_reviewed = countries_reviewed.sort_values(by='len', ascending=False) # sort results desc 
+countries_reviewed.sort_index() # sort by index
+countries_reviewed.sort_values(by=['country', 'len']) # sort by more than 1 col at a time
+
+
