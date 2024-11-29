@@ -183,7 +183,7 @@ n_fruity = reviews.description.map(lambda d: 'fruity' in d).sum()
 descriptor_counts = pd.Series([n_trop, n_fruity], index=['tropical', 'fruity'])
 
 
-# Create a series star_ratings with the number of stars corresponding to each review in the dataset.
+# Create a series "star_ratings" with the number of stars corresponding to each review in the dataset.
 def apply_stars(row):
     if row.country == 'Canada' or row.points >= 95:
         return 3
@@ -204,12 +204,20 @@ reviews['stars'] = reviews_with_stars
 
 
 ##### Grouping and Sorting ####
+# When group by, index essentially becomes what you grouped by
+
 reviews.points.value_counts()
 # does ths same:
 reviews.groupby('points').points.count()
 # ^^ Puts in groups by points, get's the points col and counts how many rows (# times appeared)
 
 reviews.groupby('points').price.min()
+# groups points together points --> price
+# 87 --> [15.99, 39.99, 29.00] 
+# 91 --> [21.99, 93.99]
+# 59 --> ...
+# Then, selects the min for each one
+
 
 # Select name of first wine reviewed for each winery in dataset
 first_wines = reviews.groupby('winery').apply(lambda df: df.title.iloc[0], include_groups=False)
@@ -221,7 +229,7 @@ reviews.points.idxmax() # --> gets the index of the row with most points
 best_wines_by_country_prov = reviews.groupby(['country', 'province']).apply(lambda df: df.loc[df.points.idxmax()], include_groups=False)
 
 # agg: run several summary functions on DF simultaneously
-statistical_summary = reviews.groupby('country').price.agg([len, min, max])
+statistical_summary = reviews.groupby('country').price.agg([len, 'min', 'max'])
 
 
 # Multi-indexes
@@ -236,5 +244,88 @@ countries_reviewed = countries_reviewed.sort_values(by='len') # sort results asc
 countries_reviewed = countries_reviewed.sort_values(by='len', ascending=False) # sort results desc 
 countries_reviewed.sort_index() # sort by index
 countries_reviewed.sort_values(by=['country', 'len']) # sort by more than 1 col at a time
+
+
+# practice for grouping and sorting
+# most common wine reviewers - Groups by twitter handle and then counts how many in each group
+reviews.groupby('taster_twitter_handle').size()
+
+# Best wine for $
+# Create series. index is wine prices. val is max points for that price. sort price asc.
+best_rating_per_price = reviews.groupby('price')['points'].max().sort_index()
+
+# min and max prices for each variety of wine
+# Create a DF whose index is the variety, vals are min and max of it
+price_extremes = reviews.groupby('variety').price.agg(['min', 'max'])
+
+
+# Most expensive wine varieties
+sorted_varieties = price_extremes.sort_values(by=['min', 'max'], ascending=False)
+
+# Series. index is reviewers. values is avg score by that reviewer
+reviewer_mean_ratings = reviews.groupby('taster_name')['points'].mean()
+
+# What combination of countries and varieties ar emost common?
+# Series index is MultiIndex of {country, variety} pairs.
+# Sort vales in Series in desc based on wine count
+country_variety_counts = reviews.groupby(['country', 'variety']).size().sort_values(ascending=False) # sort results desc 
+# reviews.groupby(['country', 'variety']) --> Group them into pairs of country,variety
+# Get the amount of occurances of this combination --> .size()
+# sort them in descending order --> .sort_values(ascending=False)
+
+
+
+
+
+
+
+
+
+
+##### Data Types and Missing Values #####
+# See types:
+reviews.price.dtype # --> on column
+reviews.dtypes # --> on all df columns
+
+# Change dtypes
+reviews.points.astype('float32')
+reviews.price.dtype
+
+# Turn int into string
+point_strings = reviews.points.astype('str')
+
+# transform whole df
+memory_effecient_reviews = reviews.astype({'points': 'int32', 'stars': 'int32', 'price': 'float32'})
+
+
+# Missing data
+pd.isnull(reviews.country) # --> Series: indexes where reviews.country is null
+reviews[pd.isnull(reviews.country)] # --> gets new df with rows that have missing country
+
+# find amount of rows with null country
+no_country = len(reviews[reviews.country.isnull()])
+# or this way (like it more):
+no_country = pd.isnull(reviews.country).sum()
+
+
+# fill in missing values
+reviews.country = reviews.country.fillna('Unknown')
+
+# replace values
+reviews.taster_twitter_handle = reviews.taster_twitter_handle.replace("@kerinokeefe", "@kerino")
+
+
+# What are most common wine-producing regions?
+# Series counting # of times each value occurs in region_1 (field often missing data)
+# replace missing vals with "Unknown"
+# sort desc
+reviews.region_1 = reviews.region_1.fillna('Unknown')
+reviews_per_region = reviews.region_1.value_counts().sort_values(ascending=False)
+
+# or just do it all in 1 line:
+reviews_per_region = reviews.region_1.fillna('Unknown').value_counts().sort_values(ascending=False)
+# or this
+reviews_per_region = reviews.fillna({'region_1': 'Unknown'}).groupby('region_1')['region_1'].count().sort_values(ascending=False)
+
 
 
