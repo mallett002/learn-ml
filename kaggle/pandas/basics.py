@@ -329,3 +329,42 @@ reviews_per_region = reviews.fillna({'region_1': 'Unknown'}).groupby('region_1')
 
 
 
+
+
+
+
+
+
+######## Renaming & Combining #######
+
+# change index/column names - rename()
+
+# rename points column to score:
+reviews_with_score = reviews.rename(columns={'points': 'score'}) 
+
+# change index name of 1st & 2nd entry
+reviews.rename(index={0: 'firstEntry', 1: 'secondEntry'})
+# set_index usually more convenient than rename of index 
+
+
+reviews.rename_axis("wines", axis='rows') # adds title for row indexes
+reviews.rename_axis("wines", axis='rows').rename_axis("fields", axis='columns')
+
+# Combining
+# concat, join and merge functions
+
+# concat - smushes dataframes/series together when they have the same fields (columns)
+canadian_youtube = pd.read_csv("./CAvideos.csv")
+british_youtube = pd.read_csv("./GBvideos.csv")
+
+combined_videos = pd.concat([canadian_youtube, british_youtube])
+
+# join
+left = canadian_youtube.set_index(['title', 'trending_date'])
+right = canadian_youtube.set_index(['title', 'trending_date'])
+
+
+# Joins them by putting the data in the same row if they have the same title and trending_date
+joined = left.join(right, lsuffix='_CAN', rsuffix='_UK')
+
+
