@@ -368,3 +368,20 @@ right = canadian_youtube.set_index(['title', 'trending_date'])
 joined = left.join(right, lsuffix='_CAN', rsuffix='_UK')
 
 
+
+# ---- PRACTICE ----
+# Select name of first wine reviewed for each winery in dataset
+
+# Pick best wine by country and province
+
+# most common wine reviewers - Groups by twitter handle and then counts how many in each group
+
+# Create series. index is wine prices. val is max points for that price. sort price asc.
+
+# min and max prices for each variety of wine
+
+# Most expensive wine varieties
+
+# Series. index is reviewers. values is avg score by that reviewer
+
+# What combination of countries and varieties ar emost common?

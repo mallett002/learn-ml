@@ -3,3 +3,4 @@ numpy==1.26.1
 scikit-learn
 tensorflow
 pandas
+seaborn
