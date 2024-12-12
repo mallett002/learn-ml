@@ -160,7 +160,10 @@ def remean_points(row):
     row.points = row.points - review_points_mean
     return row
 
-reviews.apply(remean_points, axis='columns') # axis='columns' transforms each row. axis='index' transforms each col
+reviews.apply(remean_points, axis='columns') 
+# axis='columns' transforms each row. axis='index' transforms each col
+# * 0 or 'index': apply function to each column. (default)
+# * 1 or 'columns': apply function to each row.
 
 
 # faster way to remean points column
@@ -370,9 +373,30 @@ joined = left.join(right, lsuffix='_CAN', rsuffix='_UK')
 
 
 # ---- PRACTICE ----
-# Select name of first wine reviewed for each winery in dataset
+# 1. Select name of first wine reviewed for each winery in dataset
+reviews.groupby('winery').title.first()
+reviews.groupby('winery').apply(lambda df: df.title.iloc[0], include_groups=False)
 
-# Pick best wine by country and province
+
+
+# 2. Pick best wine by country and province
+# Most points
+best_wines = reviews.groupby(['country', 'province']).apply(lambda df: df.loc[df.points.idxmax()], include_groups=False)
+
+
+
+# 3. Pick best wine by country and province for the value
+# highest ratio of points/price:
+
+# Step 1: Add the ratio column to the original DataFrame
+reviews['ratio'] = reviews['points'] / reviews['price']
+
+# Step 2: Use the ratio column within the groupby operation and calculate the index of the max ratio
+best_values = reviews.loc[reviews.groupby(['country', 'province'])['ratio'].idxmax()]
+
+print(reviews.loc[reviews.title == 'Nicosia 2013 Vulkà Bianco (Etna)'])
+
+
 
 # most common wine reviewers - Groups by twitter handle and then counts how many in each group
 
