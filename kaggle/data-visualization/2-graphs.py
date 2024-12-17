@@ -44,18 +44,76 @@ flight_data = pd.read_csv('./archive/flight_delays.csv', index_col='Month')
 
 
 
-# -- Exercises with platform gaming
+# -- Exercises with platform gaming -----------------------------------------------------------------------------------------------------------
 ign_data = pd.read_csv('./archive/ign_scores.csv', index_col='Platform')
 # print(ign_data)
+
+
+
 
 # What is the highest average score received by PC games for any genre?
 high_score = ign_data.loc['PC'].max()
 # print(high_score)
 
+
+
+
+
 # On the Playstation Vita platform, which genre has the 
-# lowest average score? Please provide the name of the column, and put your answer 
-# in single quotes (e.g., 'Action', 'Adventure', 'Fighting', etc.)
-# worst_genre = ign_data.loc['PlayStation Vita'].min()
 worst_genre = ign_data.loc['PlayStation Vita'].idxmin() # --> idxmin gets the column name for min val (col bc axis=0 for df which is default)
 # print(f"worst_genre: {worst_genre}")
 
+
+
+
+# ------------------- Bar Chart for racing ---------------------------------
+# Bar chart that shows the average score for racing games, for each platform. Your chart should have one bar for each platform.
+# racing_by_platform = ign_data.groupby('Platform')['Racing']
+
+print(ign_data.head())
+
+# What I did:
+# plt.figure(figsize=(10, 6))
+# plt.title('Avarage scores for racing games by platform')
+# platform = ign_data.index
+# sns.barplot(x=platform, y=ign_data['Racing'], palette='viridis', hue=platform)
+# plt.ylabel('avarage scores by platform')
+# plt.show()
+
+# What they did:
+# plt.figure(figsize=(8, 6))
+# sns.barplot(x=ign_data['Racing'], y=ign_data.index, palette='viridis', hue=ign_data.index)
+# plt.xlabel("")
+# plt.title("Average scores for racing by platform")
+# plt.show()
+
+
+
+
+# ----------- Heat map of average scores by genre and platform -------------------------
+# plt.figure(figsize=(20,10))
+# plt.title("Average scores by platform and genre")
+# plt.xlabel("Genre")
+# sns.heatmap(ign_data, annot=True)
+# plt.show()
+
+
+# ---------- Average scores in total by platform -------------------
+# Calculate the average score for each platform (row-wise)
+average_by_platform = ign_data.mean(axis=1) # average by row (axis column)
+
+# Sort platforms by average score
+sorted_by_scores = average_by_platform.sort_values(ascending=False)
+print(sorted_by_scores)
+
+plt.figure(figsize=(10, 6))
+plt.title('Avarage Scores by Platform')
+sns.barplot(
+    y=sorted_by_scores.index,
+    x=sorted_by_scores.values,
+    palette='crest',
+    hue=sorted_by_scores.index,
+    legend=False)
+plt.xlabel('')
+plt.ylabel('Platform')
+plt.show()

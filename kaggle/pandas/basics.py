@@ -268,7 +268,7 @@ sorted_varieties = price_extremes.sort_values(by=['min', 'max'], ascending=False
 # Series. index is reviewers. values is avg score by that reviewer
 reviewer_mean_ratings = reviews.groupby('taster_name')['points'].mean()
 
-# What combination of countries and varieties ar emost common?
+# What combination of countries and varieties are most common?
 # Series index is MultiIndex of {country, variety} pairs.
 # Sort vales in Series in desc based on wine count
 country_variety_counts = reviews.groupby(['country', 'variety']).size().sort_values(ascending=False) # sort results desc 
