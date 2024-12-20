@@ -70,7 +70,7 @@ worst_genre = ign_data.loc['PlayStation Vita'].idxmin() # --> idxmin gets the co
 # Bar chart that shows the average score for racing games, for each platform. Your chart should have one bar for each platform.
 # racing_by_platform = ign_data.groupby('Platform')['Racing']
 
-print(ign_data.head())
+# print(ign_data.head())
 
 # What I did:
 # plt.figure(figsize=(10, 6))
@@ -100,20 +100,51 @@ print(ign_data.head())
 
 # ---------- Average scores in total by platform -------------------
 # Calculate the average score for each platform (row-wise)
-average_by_platform = ign_data.mean(axis=1) # average by row (axis column)
+# average_by_platform = ign_data.mean(axis=1) # average by row (axis column)
 
 # Sort platforms by average score
-sorted_by_scores = average_by_platform.sort_values(ascending=False)
-print(sorted_by_scores)
+# sorted_by_scores = average_by_platform.sort_values(ascending=False)
+# print(sorted_by_scores)
 
-plt.figure(figsize=(10, 6))
-plt.title('Avarage Scores by Platform')
-sns.barplot(
-    y=sorted_by_scores.index,
-    x=sorted_by_scores.values,
-    palette='crest',
-    hue=sorted_by_scores.index,
-    legend=False)
-plt.xlabel('')
-plt.ylabel('Platform')
+# plt.figure(figsize=(10, 6))
+# plt.title('Avarage Scores by Platform')
+# sns.barplot(
+#     y=sorted_by_scores.index,
+#     x=sorted_by_scores.values,
+#     palette='crest',
+#     hue=sorted_by_scores.index,
+#     legend=False)
+# plt.xlabel('')
+# plt.ylabel('Platform')
+# plt.show()
+
+
+
+
+# ---------- Scatter Plots -------------------
+insurance_data = pd.read_csv('./archive/insurance.csv')
+
+# print(insurance_data.head())
+
+# scatterplot:
+sns.scatterplot(x=insurance_data['bmi'], y=insurance_data['charges'])
+
+# regression line (help see line of best fit for scatter plot)
+sns.regplot(x=insurance_data['bmi'], y=insurance_data['charges'])
+
+# color code points by 'smoker' and plot other columns (bmi & charges)
+# ie. same data as above, but color codes if they are smoker or not
+sns.scatterplot(x=insurance_data['bmi'], y=insurance_data['charges'], hue=insurance_data['smoker'])
+
+# 2 regression lines
+sns.lmplot(x='bmi', y='charges', hue='smoker', data=insurance_data)
+
 plt.show()
+
+
+
+
+
+
+
+
