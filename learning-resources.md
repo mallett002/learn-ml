@@ -12,6 +12,8 @@
         - 2.5 months (5hrs/week)
     - Good math course: https://www.deeplearning.ai/courses/mathematics-for-machine-learning-and-data-science-specialization
 
+- Book: why machines learn
+  - teaches math for ML
 
 ### AI suggested:
 - Refresh Alebra 2. Learn Trig khan academy
