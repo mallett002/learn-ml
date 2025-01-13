@@ -155,15 +155,78 @@ review_points_mean = reviews.points.mean()
 reviews.points.map(lambda p: p - review_points_mean)
 
 
+##########################################
+#### .apply() ####
+##########################################
 # apply - Similar to map, but transforms whole dataframe by calling custom dataframe on each row
+# axis:
+    # 0 or "index" --> (vertical) Doing something to each column (default)
+    # 1 or "columns" (horizontal) Doing something to each row
+
 def remean_points(row):
     row.points = row.points - review_points_mean
     return row
 
 reviews.apply(remean_points, axis='columns') 
-# axis='columns' transforms each row. axis='index' transforms each col
-# * 0 or 'index': apply function to each column. (default)
-# * 1 or 'columns': apply function to each row.
+
+
+
+# How axis works in apply: ---------------------------------------------------------------
+#  .apply notes
+treats = pd.DataFrame({
+    'cookies_sold': [1, 2, 3],
+    'donuts_sold': [4, 5, 6],
+    'muffins_sold': [7, 8, 9],
+})
+
+# print(treats)
+# print('\n\n')
+
+# 0 --> columns (vertical) Doing something to each column (default)
+def sum_cols(col):
+    return col.sum()
+
+treats_sold = treats.apply(sum_cols) # --> sums the data for each column (0 or "index")
+
+# print("Treats sold by treat:")
+# print(treats_sold)
+# print('\n\n')
+
+# 1 --> index  (horizontal) Doing something to each row
+def sum_rows(row):
+    return row.sum()
+
+treats_sold_by_row = treats.apply(sum_rows, axis=1) # --> sums the data for each row (1 or "columns")
+
+# print("Treats sold by row:")
+# print(treats_sold_by_row)
+# print('\n\n')
+
+
+# default 0 or index -- apply function to each column
+# 1 or columns -- apply function to each row
+
+# Other example of .apply (to remean points)
+example_reviews = pd.DataFrame({
+    'points': [95, 80, 85],
+    'other_column': ['A', 'B', 'C']
+})
+
+ # Calculate the mean of 'points'
+review_points_mean = example_reviews['points'].mean()
+# print(review_points_mean)
+
+ # Define the function to remean points
+def remean_points(row):
+   row['points'] = row['points'] - review_points_mean
+   return row
+
+# Apply the function to each row
+example_reviews = example_reviews.apply(remean_points, axis=1) # columns, so do something to each row
+
+# print(example_reviews['points'])
+
+# ----------------------------------------------------------------------------------------
 
 
 # faster way to remean points column
@@ -394,11 +457,12 @@ reviews['ratio'] = reviews['points'] / reviews['price']
 # Step 2: Use the ratio column within the groupby operation and calculate the index of the max ratio
 best_values = reviews.loc[reviews.groupby(['country', 'province'])['ratio'].idxmax()]
 
-print(reviews.loc[reviews.title == 'Nicosia 2013 Vulkà Bianco (Etna)'])
+# print(reviews.loc[reviews.title == 'Nicosia 2013 Vulkà Bianco (Etna)'])
 
 
 
 # most common wine reviewers - Groups by twitter handle and then counts how many in each group
+print(reviews.groupby('taster_twitter_handle').size().sort_values(ascending=False))
 
 # Create series. index is wine prices. val is max points for that price. sort price asc.
 
@@ -409,3 +473,4 @@ print(reviews.loc[reviews.title == 'Nicosia 2013 Vulkà Bianco (Etna)'])
 # Series. index is reviewers. values is avg score by that reviewer
 
 # What combination of countries and varieties ar emost common?
+
