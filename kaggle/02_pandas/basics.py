@@ -183,10 +183,10 @@ treats = pd.DataFrame({
 # print('\n\n')
 
 # 0 --> columns (vertical) Doing something to each column (default)
-def sum_cols(col):
-    return col.sum()
+def sum_cols(df):
+    return df.sum()
 
-treats_sold = treats.apply(sum_cols) # --> sums the data for each column (0 or "index")
+treats_sold = treats.apply(lambda df: df.sum()) # --> sums the data for each column (0 or "index")
 
 # print("Treats sold by treat:")
 # print(treats_sold)
@@ -444,8 +444,8 @@ reviews.groupby('winery').apply(lambda df: df.title.iloc[0], include_groups=Fals
 
 # 2. Pick best wine by country and province
 # Most points
-best_wines = reviews.groupby(['country', 'province']).apply(lambda df: df.loc[df.points.idxmax()], include_groups=False)
 
+print(reviews.groupby(['country', 'province']).apply(lambda df: df.loc[df['points'].idxmax()], include_groups=False).points)
 
 
 # 3. Pick best wine by country and province for the value
@@ -462,7 +462,7 @@ best_values = reviews.loc[reviews.groupby(['country', 'province'])['ratio'].idxm
 
 
 # most common wine reviewers - Groups by twitter handle and then counts how many in each group
-print(reviews.groupby('taster_twitter_handle').size().sort_values(ascending=False))
+reviews.groupby('taster_twitter_handle').size().sort_values(ascending=False)
 
 # Create series. index is wine prices. val is max points for that price. sort price asc.
 

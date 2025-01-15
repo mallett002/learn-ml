@@ -13,17 +13,20 @@ home_data = pd.read_csv(iowa_file_path)
 
 
 # ---------------------------------------
-# How this works
-# Training and Validation
-# Split the data into training data and validation data
-# Each has features (X) and targets (y)
+# How to make a good model:
+#   Training and Validation
+#   Split the data into training data and validation data
+#   Each has features (X) and targets (y)
 
-# Train them model
+#   Train them model
 
-# Make predictions with validation data 
-# Calculate MAE - See how far off from actual targets
+#   Make predictions with validation data 
+#   Calculate MAE - See how far off from actual targets
+#   Handle missing values
+#    - drop cols with missing vals or imputation (fill them in with averages)
+#    - see which one gives lower MAE
 
-# Find sweet spot with underfitting and overfitting
+#   Find sweet spot with underfitting and overfitting
 # ---------------------------------------
 
 
@@ -100,7 +103,7 @@ def get_mae(max_leaf_nodes, train_X, val_X, train_y, val_y):
     mae = mean_absolute_error(val_y, val_predictions)
     return(mae)
 
-# search throgh max_leaf_nodes to find the sweet spot:
+# search throgh max_leaf_nodes to find the sweet spot btw underfitting and overfitting:
 for max_leaf_nodes in [5, 25, 50, 100, 250, 500]:
     my_mae = get_mae(max_leaf_nodes, train_X, val_X, train_y, val_y)
     print("Max leaf nodes: %d  \t\t Mean Absolute Error:  %d" %(max_leaf_nodes, my_mae))
