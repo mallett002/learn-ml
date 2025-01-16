@@ -445,7 +445,7 @@ reviews.groupby('winery').apply(lambda df: df.title.iloc[0], include_groups=Fals
 # 2. Pick best wine by country and province
 # Most points
 
-print(reviews.groupby(['country', 'province']).apply(lambda df: df.loc[df['points'].idxmax()], include_groups=False).points)
+reviews.groupby(['country', 'province']).apply(lambda df: df.loc[df['points'].idxmax()], include_groups=False).points
 
 
 # 3. Pick best wine by country and province for the value
@@ -455,7 +455,8 @@ print(reviews.groupby(['country', 'province']).apply(lambda df: df.loc[df['point
 reviews['ratio'] = reviews['points'] / reviews['price']
 
 # Step 2: Use the ratio column within the groupby operation and calculate the index of the max ratio
-best_values = reviews.loc[reviews.groupby(['country', 'province'])['ratio'].idxmax()]
+
+best_vals = reviews.loc[reviews.groupby(['country', 'province'])['ratio'].idxmax().sort_values(by=['ratio'], ascending=False)]
 
 # print(reviews.loc[reviews.title == 'Nicosia 2013 Vulkà Bianco (Etna)'])
 
