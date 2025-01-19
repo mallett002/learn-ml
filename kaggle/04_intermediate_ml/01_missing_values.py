@@ -101,7 +101,7 @@ final_X_train.columns = X_train.columns
 final_X_valid.columns = X_valid.columns
 
 
-# Determine mean absolute error of imputed model:
+# Create and train model:
 model = RandomForestRegressor(n_estimators=100, random_state=0)
 model.fit(final_X_train, y_train)
 
