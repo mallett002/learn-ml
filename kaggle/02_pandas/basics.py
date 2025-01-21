@@ -457,14 +457,15 @@ reviews['ratio'] = reviews['points'] / reviews['price']
 # Step 2: Use the ratio column within the groupby operation and calculate the index of the max ratio
 
 best_vals = reviews.loc[reviews.groupby(['country', 'province'])['ratio'].idxmax().sort_values(ascending=False)]
-print(best_vals)
 # print(reviews.loc[reviews.title == 'Nicosia 2013 Vulkà Bianco (Etna)'])
 
 
 # most common wine reviewers
 reviews.groupby('taster_twitter_handle').size()
 
-# Create series. index is wine prices. val is max points for that price. sort price asc.
+# Get best rated wines per price
+best_rating_per_price = reviews.groupby('price')['points'].max().sort_values()
+
 
 # min and max prices for each variety of wine
 
