@@ -480,3 +480,54 @@ reviews.groupby('taster_twitter_handle')['points'].mean()
 reviews.groupby(['country', 'variety']).size().sort_values(ascending=False)
 
 
+### A few more practice prompts ###
+
+# Group by 'country' and 'winery', count the reviews, and find the winery with the most reviews in each country
+most_reviewed_winery_per_country = reviews.groupby(['country', 'winery']).size().groupby(level=0).idxmax()
+
+# Group by 'variety' and 'province', calculate the mean price
+avg_price_by_variety_region = reviews.groupby(['variety', 'province'])['price'].mean().sort_values(ascending=False)
+
+# Group by 'taster_twitter_handle', calculate the mean points, and get the top 5 tasters
+top_tasters = reviews.groupby('taster_twitter_handle')['points'].mean().sort_values(ascending=False).head(5)
+
+# Group by 'winery', find the wine with the highest price for each winery
+most_expensive_wine_per_winery = reviews.loc[reviews.groupby('winery')['price'].idxmax()]
+
+# Group by 'country' and 'variety', count the total number of reviews
+total_reviews_per_country_variety = reviews.groupby(['country', 'variety']).size().reset_index(name='count')
+
+
+### A bit harder ###
+
+# Find the Average Score of Wines for Each Taster, Ignoring Any Tasters Who Have Fewer Than 50 Reviews:
+# Group by 'taster_twitter_handle' and count the number of reviews for each taster
+taster_review_counts = reviews.groupby('taster_twitter_handle').size()
+# Filter out tasters with fewer than 50 reviews
+frequent_tasters = taster_review_counts[taster_review_counts >= 50].index
+# Calculate the average score for each taster with at least 50 reviews
+avg_scores_frequent_tasters = reviews[reviews['taster_twitter_handle'].isin(frequent_tasters)].groupby('taster_twitter_handle')['points'].mean()
+
+
+# Identify the Winery with the Highest Average Points per Country:
+# Group by 'country' and 'winery', calculate the mean points, and find the winery with the highest average points in each country
+highest_avg_points_winery_per_country = reviews.groupby(['country', 'winery'])['points'].mean().groupby(level=0).idxmax()
+
+
+# Find the Percentage of Wines Scoring 90+ Points in Each Country:
+# Calculate the total number of wines and the number of wines scoring 90+ points for each country
+total_wines_per_country = reviews.groupby('country').size()
+high_scoring_wines_per_country = reviews[reviews['points'] >= 90].groupby('country').size()
+# Calculate the percentage of high-scoring wines
+percentage_high_scoring_wines = (high_scoring_wines_per_country / total_wines_per_country) * 100
+
+
+# Determine the Wine Variety with the Most Consistent Ratings (Lowest Standard Deviation of Points) in Each Country:
+# Group by 'country' and 'variety', calculate the standard deviation of points, and find the variety with the lowest standard deviation in each country
+most_consistent_variety_per_country = reviews.groupby(['country', 'variety'])['points'].std().groupby(level=0).idxmin()
+
+
+# Calculate the Correlation Between Price and Points for Each Country:
+# Group by 'country' and calculate the correlation between price and points
+correlation_price_points_per_country = reviews.groupby('country').apply(lambda df: df['price'].corr(df['points']))
+
