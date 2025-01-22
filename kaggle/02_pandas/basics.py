@@ -468,6 +468,8 @@ best_rating_per_price = reviews.groupby('price')['points'].max().sort_values()
 
 
 # min and max prices for each variety of wine
+min_max_prices = reviews.groupby('variety')['price'].agg(['min', 'max']).sort_values(by=['min', 'max'])
+print(min_max_prices)
 
 # Most expensive wine varieties
 
