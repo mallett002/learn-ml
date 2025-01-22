@@ -473,7 +473,10 @@ min_max_prices = reviews.groupby('variety')['price'].agg(['min', 'max']).sort_va
 # Most expensive wine varieties
 most_exp_varieties = reviews.groupby('variety')['price'].max().sort_values(ascending=False)
 
-# Series. index is reviewers. values is avg score by that reviewer
+# Average scores by reviewers
+reviews.groupby('taster_twitter_handle')['points'].mean()
 
 # What combination of countries and varieties ar emost common?
+reviews.groupby(['country', 'variety']).size().sort_values(ascending=False)
+
 
