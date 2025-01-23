@@ -1,12 +1,14 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_absolute_error
 
 # How to deal with categorical vars??
 # 3 approaches:
 #   1 - Drop them             --> remove them (if not useful)
 #   2 - ordinal encoding      --> assigning number
 #       - Works well with "ordinal vars" (when there is a clear ranking relationship to vars)
-#   3 - on hot endcoding      --> create cols, representing presence/absence of values
+#   3 - one hot endcoding      --> create cols, representing presence/absence of values
 #       - works well when no clear ranking to vars (non ordinal) or "nominal vars"
 
 
@@ -14,7 +16,8 @@ from sklearn.model_selection import train_test_split
 # 1. LOAD SOME DATA
 #############################################################
 
-# Read the data
+# 1. For training data, use only categorical features and numerical
+#   Filter out features with range of values > 10
 data = pd.read_csv('../input/melbourne-housing-snapshot/melb_data.csv')
 
 # Separate target from predictors
@@ -36,7 +39,8 @@ X_valid_full.drop(cols_with_missing, axis=1, inplace=True)
 # Build categorical data (Finding non-numerical data that only has a few, less than 10, unique values)
 # "Cardinality" means the number of unique values in a column
 # Select categorical columns with relatively low cardinality (convenient but arbitrary)
-low_cardinality_cols = [cname for cname in X_train_full.columns if X_train_full[cname].nunique() < 10 and # if number of unique is less than 10 and it's an obj (string)
+    # if number of unique is less than 10 and it's an obj (string)
+low_cardinality_cols = [cname for cname in X_train_full.columns if X_train_full[cname].nunique() < 10 and
                         X_train_full[cname].dtype == "object"]
 
 # Select numerical columns
@@ -46,4 +50,30 @@ numerical_cols = [cname for cname in X_train_full.columns if X_train_full[cname]
 feature_cols = low_cardinality_cols + numerical_cols
 X_train = X_train_full[feature_cols].copy()
 X_valid = X_valid_full[feature_cols].copy()
+
+
+
+
+# 2. Obtain a list of all of the categorical variables in the training data.
+
+# create series of dtypes and if they are strings (index is colName)
+s = (X_train.dtypes == 'object')
+
+object_cols = list(s[s].index) # --> ['Type', 'Method', 'Regionname']
+
+
+
+
+# 3. Test the different approaches
+def score_dataset(X_train, X_valid, y_train, y_valid):
+    model = RandomForestRegressor(n_estimators=100, random_state=0)
+    model.fit(X_train, y_train)
+    preds = model.predict(X_valid)
+    return mean_absolute_error(y_valid, preds)
+
+# Score from Approach 1 (Drop Categorical Variables)
+drop_X_train = X_train.select_dtypes(exclude=['object'])
+drop_y_train = y_train.select_dtypes(exclude=['object'])
+score_drop_vars = score_dataset(drop_X_train, drop_y_train, y_train, y_valid)
+print(score_drop_vars)
 
