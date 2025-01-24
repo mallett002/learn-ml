@@ -51,16 +51,16 @@ numerical_cols = [cname for cname in X_train_full.columns if X_train_full[cname]
 
 # Keep selected columns only
 feature_cols = low_cardinality_cols + numerical_cols
-X_train = X_train_full[feature_cols].copy()
-X_valid = X_valid_full[feature_cols].copy()
+X_categ_num_train = X_train_full[feature_cols].copy()
+X_categ_num_valid = X_valid_full[feature_cols].copy()
 
 
 
 
 # 2. Obtain a list of all of the categorical variables in the training data.
 # create series of dtypes and if they are strings (index is colName)
-s = (X_train.dtypes == 'object')
-object_cols = list(s[s].index) # --> ['Type', 'Method', 'Regionname']
+s = (X_categ_num_train.dtypes == 'object')
+categorical_cols = list(s[s].index) # --> ['Type', 'Method', 'Regionname']
 
 
 
@@ -73,7 +73,7 @@ def score_dataset(X_train, X_valid, y_train, y_valid):
     return mean_absolute_error(y_valid, preds)
 
 # Score from Approach 1 (Drop Categorical Variables)
-drop_X_train = X_train.select_dtypes(exclude=['object'])
+drop_X_train = X_categ_num_train.select_dtypes(exclude=['object'])
 drop_y_train = y_train.select_dtypes(exclude=['object'])
 score_drop_vars = score_dataset(drop_X_train, drop_y_train, y_train, y_valid)
 print(score_drop_vars)
@@ -83,13 +83,13 @@ print(score_drop_vars)
 
 # 4. Score from approach 2 (ordinal encoding)
 # Make copy to avoid changing original data
-label_X_train = X_train.copy()
-label_X_valid = X_valid.copy()
+label_X_train = X_categ_num_train.copy()
+label_X_valid = X_categ_num_valid.copy()
 
 # Apply ordinal encoder to each column with categorical data
 ordinal_encoder = OrdinalEncoder()
-label_X_train[object_cols] = ordinal_encoder.fit_transform(X_train[object_cols])
-label_X_valid[object_cols] = ordinal_encoder.transform(X_valid[object_cols])
+label_X_train[categorical_cols] = ordinal_encoder.fit_transform(X_categ_num_train[categorical_cols])
+label_X_valid[categorical_cols] = ordinal_encoder.transform(X_categ_num_valid[categorical_cols])
 
 print("MAE from Approach 2 (Ordinal Encoding):") 
 print(score_dataset(label_X_train, label_X_valid, y_train, y_valid))
@@ -99,19 +99,22 @@ print(score_dataset(label_X_train, label_X_valid, y_train, y_valid))
 
 # 5. Score from Approach 3 (One-Hot Encoding)
 OH_encoder = OneHotEncoder(handle_unknown='ignore', sparse=False)
+# handle_unknown='ignore': avoid errors if validation data has classes different from training set
+# sparse=False: return encoded cols as numpy array instead of sparse matrix
 
-OH_cols_train = pd.DataFrame(OH_encoder.fit_transform(X_train[object_cols]))
-OH_cols_valid = pd.DataFrame(OH_encoder.transform(X_valid[object_cols]))
+# Do the encodings and save them to a new dataframe
+OH_cols_train = pd.DataFrame(OH_encoder.fit_transform(X_categ_num_train[categorical_cols]))
+OH_cols_valid = pd.DataFrame(OH_encoder.transform(X_categ_num_valid[categorical_cols]))
 
 # one-hot encoding removed index; put it back
-OH_cols_train.index = X_train.index
-OH_cols_valid.index = X_valid.index
+OH_cols_train.index = X_categ_num_train.index
+OH_cols_valid.index = X_categ_num_valid.index
 
-# Remove categorical columns (will replace with one-hot encoding)
-num_X_train = X_train.drop(object_cols, axis=1)
-num_X_valid = X_valid.drop(object_cols, axis=1)
+# Remove categorical columns from (will replace with one-hot encoding)
+num_X_train = X_categ_num_train.drop(categorical_cols, axis=1)
+num_X_valid = X_categ_num_valid.drop(categorical_cols, axis=1)
 
-# Add on-hot encoded columns to numerical features
+# Combine hot encoded cols df with numerical cols df
 OH_X_train = pd.concat([num_X_train, OH_cols_train], axis=1)
 OH_X_valid = pd.concat([num_X_valid, OH_cols_valid], axis=1)
 
