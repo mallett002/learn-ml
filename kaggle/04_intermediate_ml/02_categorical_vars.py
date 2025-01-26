@@ -15,10 +15,6 @@ from sklearn.preprocessing import OneHotEncoder
 #       - works well when no clear ranking to vars (non ordinal) or "nominal vars"
 
 
-#############################################################
-# 1. LOAD SOME DATA
-#############################################################
-
 # 1. For training data, use only categorical features and numerical
 #   Filter out features with range of values > 10
 data = pd.read_csv('../input/melbourne-housing-snapshot/melb_data.csv')
@@ -34,7 +30,7 @@ X_train_full, X_valid_full, y_train, y_valid = train_test_split(X, y, train_size
 # y_train: Answer (target) for traning data
 # y_valid: Answer (target) for validation of model
 
-# Drop columns with missing values in training data (simplest approach)
+# Drop columns with missing values in training data (to keep things simple for setting up data for all 3 approaches)
 cols_with_missing = [col for col in X_train_full.columns if X_train_full[col].isnull().any()] 
 X_train_full.drop(cols_with_missing, axis=1, inplace=True)
 X_valid_full.drop(cols_with_missing, axis=1, inplace=True)
@@ -126,3 +122,56 @@ print("MAE from Approach 3 (One-Hot Encoding):")
 print(score_dataset(OH_X_train, OH_X_valid, y_train, y_valid))
 
 # Typically One-Hot encoding performes the best
+
+
+
+
+
+
+
+
+
+
+
+#############################################################
+# CATEGORICAL VARS EXERCISE
+#############################################################
+
+# 1. load data and test split it
+X = pd.read_csv('../input/train.csv', index_col='Id') 
+X_test = pd.read_csv('../input/test.csv', index_col='Id')
+
+# remove rows with missing target, separate target from predictors
+X.dropna(axis=0, subset=['SalePrice'], inplace=True,) # 0: drop row, subset: only look at SalePrice, inplace: dont create whole new DF
+
+# target
+y = X.SalePrice
+
+# Remove target col from training data
+X.drop(['SalePrice'], axis=1, inplace=True)
+
+# to keep things simple, drop cols w/ missing values
+cols_with_missing = [col for col in X.columns if X[col].isnull().any()]
+X.drop(cols_with_missing, axis=1, inplace=True)
+X_test.drop(cols_with_missing, axis=1, inplace=True)
+
+# Separate validation set from training set
+X_train, X_valid, y_train, y_valid = train_test_split(X, y, train_size=0.8, test_size=0.2, random_state=0)
+# random_state=0: ensures you always get the same test split of the data for reproducibility
+
+# Compare different models, def score_dataset func
+def score_dataset(X_train, X_valid, y_train, y_valid):
+    model = RandomForestRegressor(n_estimators=100, random_state=0)
+    model.fit(X_train, y_train)
+    preds = model.predict(X_valid)
+
+    return mean_absolute_error(y_valid, preds) # See how far off y-hat (preds) is from actual (y_valid)
+
+
+# 2. Compare the different approaches
+
+# Drop columns approach
+drop_X_train = X_train.select_dtypes(exclude=['object'])
+drop_X_valid = X_valid.select_dtypes(exclude=['object'])
+print("MAE from Approach 1 (Drop categorical variables):")
+score_dataset(drop_X_train, drop_X_valid, y_train, y_valid) # 17837.8257...
