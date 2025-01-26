@@ -7,12 +7,13 @@ from sklearn.preprocessing import OneHotEncoder
 
 
 # How to deal with categorical vars??
+# Get errors trying to plug them into ML models w/o pre-processing them first
 # 3 approaches:
 #   1 - Drop them             --> remove them (if not useful)
-#   2 - ordinal encoding      --> assigning number
+#   2 - Ordinal encoding      --> assigning number
 #       - Works well with "ordinal vars" (when there is a clear ranking relationship to vars)
-#   3 - one hot endcoding      --> create cols, representing presence/absence of values
-#       - works well when no clear ranking to vars (non ordinal) or "nominal vars"
+#   3 - One Hot Endcoding      --> create cols, representing presence/absence of values
+#       - Works well when no clear ranking to vars (non ordinal) or "nominal vars"
 
 
 # 1. For training data, use only categorical features and numerical
@@ -175,3 +176,16 @@ drop_X_train = X_train.select_dtypes(exclude=['object'])
 drop_X_valid = X_valid.select_dtypes(exclude=['object'])
 print("MAE from Approach 1 (Drop categorical variables):")
 score_dataset(drop_X_train, drop_X_valid, y_train, y_valid) # 17837.8257...
+
+
+# Ordinal Encoder:
+# Note, the training data and the validation data have different unique values for a column.
+# this will cause an error
+print("Unique values in 'Condition2' column in training data:", X_train['Condition2'].unique())
+print("\nUnique values in 'Condition2' column in validation data:", X_valid['Condition2'].unique())
+# Unique values in 'Condition2' column in training data: ['Norm' 'PosA' 'Feedr' 'PosN' 'Artery' 'RRAe']
+# Unique values in 'Condition2' column in validation data: ['Norm' 'RRAn' 'RRNn' 'Artery' 'Feedr' 'PosN']
+
+# Can write custom ordinal encoder to deal with new categories.
+# Can also just drop problematic columns (easier) as seen here:
+
