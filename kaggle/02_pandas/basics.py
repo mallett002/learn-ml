@@ -485,11 +485,11 @@ reviews.groupby(['country', 'variety']).size().sort_values(ascending=False)
 # Group by 'country' and 'winery', count the reviews, and find the winery with the most reviews in each country
 most_reviewed_winery_per_country = reviews.groupby(['country', 'winery']).size().sort_values(ascending=False)
 
-# # Group by 'variety' and 'province', calculate the mean price
-# avg_price_by_variety_region = reviews.groupby(['variety', 'province'])['price'].mean().sort_values(ascending=False)
+# Get the average price per variety and province
+reviews.groupby(['variety', 'province']).price.agg('mean').sort_values(ascending=False)
 
-# # Group by 'taster_twitter_handle', calculate the mean points, and get the top 5 tasters
-# top_tasters = reviews.groupby('taster_twitter_handle')['points'].mean().sort_values(ascending=False).head(5)
+# Group by 'taster_twitter_handle', calculate the mean points, and get the top 5 tasters
+reviews.groupby('taster_twitter_handle')['points'].mean().sort_values(ascending=False).head(5)
 
 # # Group by 'winery', find the wine with the highest price for each winery
 # most_expensive_wine_per_winery = reviews.loc[reviews.groupby('winery')['price'].idxmax()]
