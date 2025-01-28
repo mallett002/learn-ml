@@ -491,10 +491,15 @@ reviews.groupby(['variety', 'province']).price.agg('mean').sort_values(ascending
 # Group by 'taster_twitter_handle', calculate the mean points, and get the top 5 tasters
 reviews.groupby('taster_twitter_handle')['points'].mean().sort_values(ascending=False).head(5)
 
-# # Group by 'winery', find the wine with the highest price for each winery
-# most_expensive_wine_per_winery = reviews.loc[reviews.groupby('winery')['price'].idxmax()]
+# Group by 'winery', find the wine with the highest price for each winery
+# print('mine:')
+highest_price_per_winery = reviews.groupby('winery')['price'].max().sort_values(ascending=False)
+# print(highest_price_per_winery)
+ais_highest_price_per_winery = reviews.loc[reviews.groupby('winery')['price'].idxmax()].sort_values(by=['price'], ascending=False)
+# print('\ntheres:')
+# print(ais_highest_price_per_winery)
 
-# # Group by 'country' and 'variety', count the total number of reviews
+# # Group by 'countrytheres 'variety', count the total number of reviews
 # total_reviews_per_country_variety = reviews.groupby(['country', 'variety']).size().reset_index(name='count')
 
 
