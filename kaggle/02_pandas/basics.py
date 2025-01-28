@@ -484,7 +484,6 @@ reviews.groupby(['country', 'variety']).size().sort_values(ascending=False)
 
 # Group by 'country' and 'winery', count the reviews, and find the winery with the most reviews in each country
 most_reviewed_winery_per_country = reviews.groupby(['country', 'winery']).size().sort_values(ascending=False)
-print(most_reviewed_winery_per_country)
 
 # # Group by 'variety' and 'province', calculate the mean price
 # avg_price_by_variety_region = reviews.groupby(['variety', 'province'])['price'].mean().sort_values(ascending=False)

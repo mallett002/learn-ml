@@ -189,3 +189,14 @@ print("\nUnique values in 'Condition2' column in validation data:", X_valid['Con
 # Can write custom ordinal encoder to deal with new categories.
 # Can also just drop problematic columns (easier) as seen here:
 
+# get the cols with values of type object (string)
+object_cols = [col for col in X_train.columns if X_train[col].dtype == 'object'] # get the cols with values of type object (string)
+print(object_cols)
+
+# get columns with values present in both testing data and training data
+good_label_cols = [col for col in object_cols if
+                   set(X_valid[col]).issubset(set(X_train[col]))] # 
+
+# Remove good from all to leave just the bad ones
+bad_label_cols = list(set(object_cols)-set(good_label_cols))
+
