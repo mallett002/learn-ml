@@ -496,21 +496,19 @@ reviews.groupby('taster_twitter_handle')['points'].mean().sort_values(ascending=
 highest_price_per_winery = reviews.groupby('winery')['price'].max().sort_values(ascending=False)
 # print(highest_price_per_winery)
 ais_highest_price_per_winery = reviews.loc[reviews.groupby('winery')['price'].idxmax()].sort_values(by=['price'], ascending=False)
-# print('\ntheres:')
-# print(ais_highest_price_per_winery)
 
-# # Group by 'countrytheres 'variety', count the total number of reviews
-# total_reviews_per_country_variety = reviews.groupby(['country', 'variety']).size().reset_index(name='count')
+# Group by 'country' 'variety', count the total number of reviews
+total_reviews_per_country_variety = reviews.groupby(['country', 'variety']).size().reset_index(name='the total')
 
 
 # ### A bit harder ###
 
-# # Find the Average Score of Wines for Each Taster, Ignoring Any Tasters Who Have Fewer Than 50 Reviews:
-# # Group by 'taster_twitter_handle' and count the number of reviews for each taster
+# Find the Average Score of Wines for Each Taster, Ignoring Any Tasters Who Have Fewer Than 50 Reviews:
+# Group by 'taster_twitter_handle' and count the number of reviews for each taster
 # taster_review_counts = reviews.groupby('taster_twitter_handle').size()
-# # Filter out tasters with fewer than 50 reviews
-# frequent_tasters = taster_review_counts[taster_review_counts >= 50].index
-# # Calculate the average score for each taster with at least 50 reviews
+# Filter out tasters with fewer than 50 reviews
+# frequent_tasters = taster_review_counts[taster_review_counts >= 2].index
+# Calculate the average score for each taster with at least 50 reviews
 # avg_scores_frequent_tasters = reviews[reviews['taster_twitter_handle'].isin(frequent_tasters)].groupby('taster_twitter_handle')['points'].mean()
 
 
