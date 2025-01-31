@@ -435,7 +435,16 @@ joined = left.join(right, lsuffix='_CAN', rsuffix='_UK')
 
 
 
-# ---- PRACTICE ----
+
+
+
+
+
+
+########################################################################################################
+####### PRACTICE ########
+########################################################################################################
+
 # 1. Select name of first wine reviewed for each winery in dataset
 reviews.groupby('winery').title.first()
 reviews.groupby('winery').apply(lambda df: df.title.iloc[0], include_groups=False)
@@ -460,64 +469,73 @@ best_vals = reviews.loc[reviews.groupby(['country', 'province'])['ratio'].idxmax
 # print(reviews.loc[reviews.title == 'Nicosia 2013 Vulkà Bianco (Etna)'])
 
 
-# most common wine reviewers
+# 4. Most common wine reviewers
 reviews.groupby('taster_twitter_handle').size()
 
-# Get best rated wines per price
+# 5. Get best rated wines per price
 best_rating_per_price = reviews.groupby('price')['points'].max().sort_values()
 
 
-# min and max prices for each variety of wine
+# 6. min and max prices for each variety of wine
 min_max_prices = reviews.groupby('variety')['price'].agg(['min', 'max']).sort_values(by=['min', 'max'])
 
-# Most expensive wine varieties
+# 7. Most expensive wine varieties
 most_exp_varieties = reviews.groupby('variety')['price'].max().sort_values(ascending=False)
 
-# Average scores by reviewers
+# 8. Average scores by reviewers
 reviews.groupby('taster_twitter_handle')['points'].mean()
 
-# What combination of countries and varieties ar emost common?
+# 9. What combination of countries and varieties ar emost common?
 reviews.groupby(['country', 'variety']).size().sort_values(ascending=False)
 
 
 ### A few more practice prompts ###
 
-# Group by 'country' and 'winery', count the reviews, and find the winery with the most reviews in each country
+# 10. Group by 'country' and 'winery', count the reviews, and find the winery with the most reviews in each country
 most_reviewed_winery_per_country = reviews.groupby(['country', 'winery']).size().sort_values(ascending=False)
 
-# Get the average price per variety and province
+# 11. Get the average price per variety and province
 reviews.groupby(['variety', 'province']).price.agg('mean').sort_values(ascending=False)
 
-# Group by 'taster_twitter_handle', calculate the mean points, and get the top 5 tasters
+# 12. Group by 'taster_twitter_handle', calculate the mean points, and get the top 5 tasters
 reviews.groupby('taster_twitter_handle')['points'].mean().sort_values(ascending=False).head(5)
 
-# Group by 'winery', find the wine with the highest price for each winery
+# 13. Group by 'winery', find the wine with the highest price for each winery
 # print('mine:')
 highest_price_per_winery = reviews.groupby('winery')['price'].max().sort_values(ascending=False)
 # print(highest_price_per_winery)
 ais_highest_price_per_winery = reviews.loc[reviews.groupby('winery')['price'].idxmax()].sort_values(by=['price'], ascending=False)
 
-# Group by 'country' 'variety', count the total number of reviews
+# 14. Group by 'country' 'variety', count the total number of reviews
 total_reviews_per_country_variety = reviews.groupby(['country', 'variety']).size().reset_index(name='the total')
 
 
-# ### A bit harder ###
 
-# Find the Average Score of Wines for Each Taster, Ignoring Any Tasters Who Have Fewer Than 50 Reviews:
+
+##### A bit harder #####
+
+
+
+# 15. Find the Average Score of Wines for Each Taster, Ignoring Any Tasters Who Have Fewer Than 2 Reviews:
 # Group by 'taster_twitter_handle' and count the number of reviews for each taster
-# taster_review_counts = reviews.groupby('taster_twitter_handle').size()
-# Filter out tasters with fewer than 50 reviews
-# frequent_tasters = taster_review_counts[taster_review_counts >= 2].index
-# Calculate the average score for each taster with at least 50 reviews
-# avg_scores_frequent_tasters = reviews[reviews['taster_twitter_handle'].isin(frequent_tasters)].groupby('taster_twitter_handle')['points'].mean()
+taster_review_counts = reviews.groupby('taster_twitter_handle').size()
+
+# Filter out tasters with fewer than 2 reviews
+frequent_tasters = taster_review_counts[taster_review_counts >= 2].index # get list of taster_twitter_handles with more than 2 reviews
+
+# Calculate the average score for each taster with at least 2 reviews
+# build df from ones that have the frequent tasters as their taster_twitter_handle
+# groupby taster_twitter_handle
+# get avg points for those
+avg_scores_frequent_tasters = reviews[reviews['taster_twitter_handle'].isin(frequent_tasters)].groupby('taster_twitter_handle')['points'].mean()
 
 
-# # Identify the Winery with the Highest Average Points per Country:
+# 16. # Identify the Winery with the Highest Average Points per Country:
 # # Group by 'country' and 'winery', calculate the mean points, and find the winery with the highest average points in each country
 # highest_avg_points_winery_per_country = reviews.groupby(['country', 'winery'])['points'].mean().groupby(level=0).idxmax()
 
 
-# # Find the Percentage of Wines Scoring 90+ Points in Each Country:
+# 17. # Find the Percentage of Wines Scoring 90+ Points in Each Country:
 # # Calculate the total number of wines and the number of wines scoring 90+ points for each country
 # total_wines_per_country = reviews.groupby('country').size()
 # high_scoring_wines_per_country = reviews[reviews['points'] >= 90].groupby('country').size()
@@ -525,12 +543,14 @@ total_reviews_per_country_variety = reviews.groupby(['country', 'variety']).size
 # percentage_high_scoring_wines = (high_scoring_wines_per_country / total_wines_per_country) * 100
 
 
-# # Determine the Wine Variety with the Most Consistent Ratings (Lowest Standard Deviation of Points) in Each Country:
+# 18. # Determine the Wine Variety with the Most Consistent Ratings (Lowest Standard Deviation of Points) in Each Country:
 # # Group by 'country' and 'variety', calculate the standard deviation of points, and find the variety with the lowest standard deviation in each country
 # most_consistent_variety_per_country = reviews.groupby(['country', 'variety'])['points'].std().groupby(level=0).idxmin()
 
 
-# # Calculate the Correlation Between Price and Points for Each Country:
+# 19. # Calculate the Correlation Between Price and Points for Each Country:
 # # Group by 'country' and calculate the correlation between price and points
 # # correlation_price_points_per_country = reviews.groupby('country').apply(lambda df: df['price'].corr(df['points']), include_groups=False)
 
+
+print('\n')
