@@ -221,7 +221,9 @@ print("MAE from Approach 2 (Ordinal Encoding):")
 print(score_dataset(label_X_train, label_X_valid, y_train, y_valid)) # 17098.01649543379
 
 
-# 3. Investigate Cardinality
+
+
+# 2.c. Investigate Cardinality
 # Get number of unique entries in each column with categorical data
 object_nunique = list(map(lambda col: X_train[col].nunique(), object_cols)) # [5, 2, 4, 4, ...]
 pairs = zip(object_cols, object_nunique) # ('Location', 5) ('HasGarage', 2) ...
@@ -233,4 +235,10 @@ sorted(d.items(), key=lambda x: x[1]) # sort by the nunique vals [('Street', 2),
 
 
 
+
+
+# 2.d. One hot encoding:
+# 'Neighborhood' has cardinality of 25 (25 options)
+# can make dataset huge if we one hot encode all of these columns (especially ones with high cardinality)
+# only one-hot-encode low cardinality values - drop others or use ordinal encoding
 
