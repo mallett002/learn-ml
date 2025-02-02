@@ -162,3 +162,11 @@ OH_X_valid.columns = OH_X_valid.columns.astype(str)
 
 print("MAE from Approach 3 (One-Hot Encoding):") 
 print(score_dataset(OH_X_train, OH_X_valid, y_train, y_valid)) # 17525.345719178084
+
+
+
+
+# Results
+# Ordinal encoding:     17098.01649543379    
+# One hot encoding:     17525.345719178084
+# Drop cols:            17837.82570776256
