@@ -527,8 +527,13 @@ frequent_tasters = taster_review_counts[taster_review_counts >= 2].index # get l
 # build df from ones that have the frequent tasters as their taster_twitter_handle
 # groupby taster_twitter_handle
 # get avg points for those
-avg_scores_frequent_tasters = reviews[reviews['taster_twitter_handle'].isin(frequent_tasters)].groupby('taster_twitter_handle')['points'].mean()
-
+avg_scores_frequent_tasters = (
+    reviews[
+        reviews['taster_twitter_handle'].isin(frequent_tasters)
+    ]
+    .groupby('taster_twitter_handle')['points']
+    .mean()
+)
 
 # 16. # Identify the Winery with the Highest Average Points per Country:
 # # Group by 'country' and 'winery', calculate the mean points, and find the winery with the highest average points in each country
