@@ -29,7 +29,9 @@
 5. Calculate MAE - See how far off from actual targets
 
 6. Find sweet spot with underfitting and overfitting
+    - Address underfitting (high bias)
+    - Address overfitting (high variance):
+        - Get more training data
+        - Remove features (just pick the most appropriate Xs)
+        - Regularization
 
-
-LogisticRegression(C=1.0, class_weight=None, dual=False, fit_intercept=True,
-Intercept_scaling=1, 11_ratio=None, max_iter=100, nulti_class='auto', n_jobs=None, penalty='12', random_state=None, solver='lbfgs', tol=0.0001, verbose=0, warm_start=False)
