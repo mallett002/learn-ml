@@ -5,6 +5,7 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error
 from sklearn.preprocessing import OrdinalEncoder
 from sklearn.preprocessing import OneHotEncoder
+from sklearn.linear_model import LogisticRegression
 
 
 #############################################################
@@ -170,3 +171,11 @@ print(score_dataset(OH_X_train, OH_X_valid, y_train, y_valid)) # 17525.345719178
 # Ordinal encoding:     17098.01649543379    
 # One hot encoding:     17525.345719178084
 # Drop cols:            17837.82570776256
+
+
+# I know this doesn't belong here, but here's an example of logistic regression with sklearn
+LogisticRegression(
+    C=1.0, class_weight=None, dual=False, fit_intercept=True,
+    Intercept_scaling=1, l1_ratio=None, max_iter=100, nulti_class='auto',
+    n_jobs=None, penalty='12', random_state=None, solver='lbfgs',
+    tol=0.0001, verbose=0, warm_start=False)

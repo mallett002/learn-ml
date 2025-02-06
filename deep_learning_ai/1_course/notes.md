@@ -54,3 +54,8 @@ Target variable - the data you are trying to teach the model to reach
 m = total number of training examples
 (x, y) = single training example
 
+
+
+# Gradient Descent with Logistic Regression
+how to find good params for w,b
+once find, can use model to find y-hat

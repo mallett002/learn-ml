@@ -12,6 +12,9 @@
     - Feature scaling:
         - aim for -1 <= xj <= 1
             - ex: -100 <= x3 <= 100 (should scale)
+    - Feature engineering:
+        - choose best features for model
+        - ex: lot: len & width; We care mostly about lot area len x width (so make that)
     - choose good learning rate
         - start at .001 and increment by x3
     - handle categorical vars
@@ -28,3 +31,5 @@
 6. Find sweet spot with underfitting and overfitting
 
 
+LogisticRegression(C=1.0, class_weight=None, dual=False, fit_intercept=True,
+Intercept_scaling=1, 11_ratio=None, max_iter=100, nulti_class='auto', n_jobs=None, penalty='12', random_state=None, solver='lbfgs', tol=0.0001, verbose=0, warm_start=False)

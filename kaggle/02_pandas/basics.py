@@ -491,7 +491,7 @@ reviews.groupby(['country', 'variety']).size().sort_values(ascending=False)
 
 ### A few more practice prompts ###
 
-# 10. Group by 'country' and 'winery', count the reviews, and find the winery with the most reviews in each country
+# 10. Find the winery with the most reviews in each country
 most_reviewed_winery_per_country = reviews.groupby(['country', 'winery']).size().sort_values(ascending=False)
 
 # 11. Get the average price per variety and province
@@ -537,7 +537,13 @@ avg_scores_frequent_tasters = (
 
 # 16. # Identify the Winery with the Highest Average Points per Country:
 # # Group by 'country' and 'winery', calculate the mean points, and find the winery with the highest average points in each country
-# highest_avg_points_winery_per_country = reviews.groupby(['country', 'winery'])['points'].mean().groupby(level=0).idxmax()
+highest_avg_points_winery_per_country = ( 
+    reviews.groupby(['country', 'winery'])
+        .points
+        .mean()  # Calculate the average points for each country-winery combination
+        .groupby(level=0)  # Re-group by just the country (the mean calculation created a multi-index of (country, winery))
+        .idxmax()  # Get the indexes (country, winery) with the highest average points within each country
+)
 
 
 # 17. # Find the Percentage of Wines Scoring 90+ Points in Each Country:
