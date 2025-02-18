@@ -35,3 +35,6 @@
         - Remove features (just pick the most appropriate Xs)
         - Regularization
 
+
+- Using pipelines can greatly clean up code. See kaggle/04_intermediate_ml/03_pipelines.py
+
