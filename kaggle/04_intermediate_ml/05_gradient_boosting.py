@@ -97,13 +97,35 @@ my_model.fit(X_train, y_train,
 # n_jobs
 ##############################
 # n_jobs: how many jobs to run in parallel: (good to set to amount of cores on your machine)
-# only ideal for larger datasets
+# only ideal for larger datasets, if dataset is not very large, this doesn't help much and is more of a distraction 
 my_model = XGBRegressor(n_estimators=500, learning_rate=0.05, n_jobs=4)
 my_model.fit(X_train, y_train,
              early_stopping_rounds=5,
              eval_set=[(X_valid, y_valid)],
              verbose=False)
 
+
+# Steps:
+# 1. Split the Data:
+#   - Begin by splitting your data into training and validation sets.
+
+# 2. Initial Model Training:
+#   - Train an initial model with a default or initial set of parameters, including a value for n_estimators.
+
+# 3. Parameter Tuning:
+#   - Use techniques like cross-validation to determine the best set of hyperparameters, including n_estimators.
+#   - Cross-validation will help you evaluate model performance over different subsets of data to avoid overfitting.
+#   - Specifically, for n_estimators, you'll start with a range of values (e.g., 50, 100, 200) and fit the model for each value.
+#       - Cross-validation scores will help you identify the optimal number of boosting rounds.
+
+# 4. Model Evaluation:
+#   - Evaluate the performance of your model with the optimal parameters on the validation set.
+
+# 5. Final Model Training:
+#   - Once you've identified the best hyperparameters, including n_estimators, retrain your model using the entire training dataset with these parameters.
+
+# 6. Final Evaluation:
+#   - Finally, evaluate your retrained model on a separate test dataset (if available) to assess its performance.
 
 
 
