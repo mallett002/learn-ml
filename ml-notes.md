@@ -23,6 +23,7 @@
         - One hot endcoding 3 approaches:
 
 3. Train the model
+    - Use ensemble method (random forest or gradient boosting)
 
 4. Make predictions with validation data 
 
