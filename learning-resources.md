@@ -7,6 +7,7 @@
     - https://www.kaggle.com/learn
 
 - Tensor flow
+    - https://www.kaggle.com/learn-guide/tensorflow
     - https://www.tensorflow.org/tutorials [Seems_good_starting_point]
     - https://www.tensorflow.org/resources/learn-ml
         - https://www.tensorflow.org/resources/learn-ml/basics-of-machine-learning
