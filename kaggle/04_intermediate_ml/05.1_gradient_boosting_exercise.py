@@ -82,9 +82,12 @@ print("Mean Absolute Error:" , mae_2) # Mean Absolute Error: 17032.769063035103
 #########################################################
 # Step 3: Make a worse model
 #########################################################
+my_model_3 = XGBRegressor(n_estimators=1, learning_rate=100)
 
+my_model_3.fit(X_train, y_train)
 
+predictions_3 = my_model_3.predict(X_valid)
 
-
+mae_3 = mean_absolute_error(predictions_3, y_valid) # Mean Absolute Error: 5306483.8100385275
 
 
