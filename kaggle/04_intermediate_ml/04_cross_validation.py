@@ -6,6 +6,14 @@
 # This method helps ensure that your model performs well on different subsets of the data, making it more robust and less likely to overfit.
 # Better for training smaller datasets
 
+# 20%   20%    20%    20%    20%
+# val   trn    trn    trn    trn:  score
+# trn   val    trn    trn    trn:  score
+# trn   trn    val    trn    trn:  score
+# trn   trn    trn    val    trn:  score
+# trn   trn    trn    trn    val:  score
+
+
 import pandas as pd
 
 from sklearn.ensemble import RandomForestRegressor
