@@ -24,7 +24,7 @@
 
 # Fix in practice:
 #   - Training the model: first split data into training and validation data.
-#   - Impute on the training data (to generate the mean).
+#   - Impute on the training data (to generate the mean of the training data only).
 #   - Then, when you are testing the model with the validation data, use that same mean you got from the training data to fill in missing values
 
 import pandas as pd
@@ -52,3 +52,25 @@ cv_scores = cross_val_score(my_pipeline, X, y, cv=5, scoring='accuracy')
 print("Cross-validation accuracy: %f" % cv_scores.mean()) # Cross-validation accuracy: 0.981052
 
 # 98% is high, very sus. Need to inspect for target leakage.
+# y = 0 or 1
+
+# Get expenditures for cardholders vs non-cardholders
+expenditures_for_cardholders = X.expenditure[y] # Rows where y is True
+# X.loc[y]['expenditure']
+expenditures_for_noncardholders = X.expenditure[~y] # Rows where y is False (negate the bits to get the opposite)
+# X.loc[~y]['expenditure']
+
+print( 'Fraction that were accepted & no expenditures: %.2f' %((expenditures_for_cardholders == 0).mean()) ) # 0.02 (2%)
+print( 'Fraction that were denied & no expenditures: %.2f' %((expenditures_for_noncardholders == 0).mean()) ) # 1.00 (all 100%) 
+
+
+# Probably means expenditures on the card they applied for. 
+# Drop leaky predictors from dataset
+potential_leaks = ['expenditure', 'share', 'active', 'majorcards']
+
+X2 = X.drop(potential_leaks, axis=1)
+
+# Evaluate the model with leaky predictors removed
+cv_scores = cross_val_score(my_pipeline, X2, y, cv=5, scoring='accuracy')
+
+print("Cross-val accuracy: %f" % cv_scores.mean()) # 0.830919 
