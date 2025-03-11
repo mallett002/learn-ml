@@ -96,3 +96,30 @@ b = np.array([-1, 1, 2])
 
 # X or a[0]
 a_in = np.array([-2, 4])
+
+
+
+
+#######################################
+##### Vectorized version ######
+#######################################
+# Vectorization is much more efficient
+
+# X becomes a 2d array:
+X = np.array([[200, 17]])
+
+# W is same as before:
+W = np.array([
+    [1, -3, 5],
+    [2, 4, -6]
+])
+
+# b becomes B as a vector
+B = np.array([[-1, 1, 2]])
+
+def vectorizedDense(A_in, W, B):
+    Z = np.matmul(A_in, W) + B # matmul is matrix multiplication
+
+    return sigmoid(Z)
+
+
