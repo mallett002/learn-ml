@@ -7,10 +7,10 @@
 
 # 1. Target Leakage: "Predictors include data that will not be available at the time you make predictions"
 # Ex: Predicting who will get pnemonia
-#   - feature in training set (`took_antibiotics`)
+#   - Feature in training set (`took_antibiotics`)
 #       - Typically take this after actually getting pnemonia
 #       - Model learns this strong correlation, `took_antibiotics` --> has_pnemonia = true
-#   - `took_antibiotics` will be false in real world bc trying to predict who will get pnemonia
+#   - `took_antibiotics` will be false in real world bc trying to predict who will get pnemonia, not who got it
 #   - Should remove it from training set
 
 
