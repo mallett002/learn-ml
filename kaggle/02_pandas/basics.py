@@ -470,7 +470,7 @@ best_vals = reviews.loc[reviews.groupby(['country', 'province'])['ratio'].idxmax
 
 
 # 4. Most common wine reviewers
-reviews.groupby('taster_twitter_handle').size()
+reviews.groupby('taster_twitter_handle').size().sort_values(ascending=False)
 
 # 5. Get best rated wines per price
 best_rating_per_price = reviews.groupby('price')['points'].max().sort_values()
