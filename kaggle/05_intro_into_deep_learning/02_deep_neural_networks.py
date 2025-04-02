@@ -18,3 +18,8 @@ model = keras.Sequential([
     # the linear output layer 
     layers.Dense(units=1),
 ])
+
+
+
+
+# Deep Neural Networks exercise

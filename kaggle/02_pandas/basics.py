@@ -1,7 +1,7 @@
 import pandas as pd
 
 # data_frame = pd.read_csv('./data.csv', index_col=0)
-random_df_data = pd.read_csv('./data.csv')
+# random_df_data = pd.read_csv('./data.csv')
 
 # print(random_df_data.shape) # --> (record_count, column_count)
 # print(random_df_data.head())
