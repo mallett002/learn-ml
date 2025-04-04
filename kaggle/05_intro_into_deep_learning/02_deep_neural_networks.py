@@ -22,4 +22,36 @@ model = keras.Sequential([
 
 
 
-# Deep Neural Networks exercise
+# Deep Neural Networks exercise ##################################
+model = keras.Sequential([
+    layers.Dense(units=512, activation='relu', input_shape=[8]),
+    layers.Dense(units=512, activation='relu'),
+    layers.Dense(units=512, activation='relu'),
+    layers.Dense(units=1),
+])
+
+# Can put some other layer in between a layer and its activation function:
+# (Equivalent to model above)
+model = keras.Sequential([
+    layers.Dense(512, input_shape=[8]),
+    layers.Activation('relu'),
+
+    layers.Dense(512),
+    layers.Activation('relu'),
+
+    layers.Dense(512),
+    layers.Activation('relu'),
+
+    layers.Dense(1),
+])
+
+# Many variations of the ReLU activation function:
+# LeakyReLU: allows a small gradient when the input is negative
+# Exponential Linear Unit (ELU): smooths the transition from negative to positive
+# Scaled Exponential Linear Unit (SELU): self-normalizing property
+# Swish: smooth transition from negative to positive
+# Softplus: smooth approximation of the ReLU function
+# Softmax: used in multi-class classification problems
+# Sigmoid: used in binary classification problems
+# Tanh: used in binary classification problems
+
