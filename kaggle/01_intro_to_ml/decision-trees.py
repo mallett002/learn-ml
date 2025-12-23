@@ -1,3 +1,4 @@
+import joblib
 import pandas as pd
 
 from sklearn.tree import DecisionTreeRegressor
@@ -47,7 +48,7 @@ X = home_data[feature_names]
 
 # Print statistics for X
 print(X.describe())
-# Print top few rows for featurs (X)
+# Print top few rows for features (X)
 print(X.head())
 
 
@@ -98,9 +99,13 @@ val_mae = mean_absolute_error(val_y, val_predictions) # --> 29652.931506849316
 # Find sweet spot between underfitting and overfitting by comparing max_leaf_nodes' MAE
 def get_mae(max_leaf_nodes, train_X, val_X, train_y, val_y):
     model = DecisionTreeRegressor(max_leaf_nodes=max_leaf_nodes, random_state=0)
+
     model.fit(train_X, train_y)
+
     val_predictions = model.predict(val_X)
+
     mae = mean_absolute_error(val_y, val_predictions)
+
     return(mae)
 
 # search throgh max_leaf_nodes to find the sweet spot btw underfitting and overfitting:
@@ -108,16 +113,12 @@ for max_leaf_nodes in [5, 25, 50, 100, 250, 500]:
     my_mae = get_mae(max_leaf_nodes, train_X, val_X, train_y, val_y)
     print("Max leaf nodes: %d  \t\t Mean Absolute Error:  %d" %(max_leaf_nodes, my_mae))
 
-# Don't split the data anymore now that we found our sweet spot btw underfitting/overfitting
-final_model = DecisionTreeRegressor(max_leaf_nodes=100, random_state=0)
 
+# Now we found sweet spot (100 leaf nodes), train the model on all the data for our final model:
+final_model = DecisionTreeRegressor(max_leaf_nodes=100, random_state=0)
 # fit the final model and uncomment the next two lines
 final_model.fit(X, y)
 
-
-
-
-
-
-
-
+# serialize (freeze) the model so we can deploy it
+joblib.dump(final_model, 'iowa_housing_model.pkl')
+print("Model saved successfully!")

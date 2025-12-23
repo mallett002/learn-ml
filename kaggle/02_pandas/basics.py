@@ -9,9 +9,9 @@ import pandas as pd
 
 # Making a data frame from sratch with index labels:
 fruit_sales = pd.DataFrame({
-    'Apples': [35, 41, 19, 10],
+    'Apples':  [35, 41, 19, 10],
     'Bananas': [21, 34, 31, 3],
-    'Kiwis': [92, 48, 19, 9],
+    'Kiwis':   [92, 48, 19, 9],
 }, index=(['2017 Sales', '2018 Sales', '2019 Sales', '2020 Sales']))
 # Makes this vv
 #                 Apples	Bananas     Kiwis
