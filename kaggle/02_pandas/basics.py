@@ -435,9 +435,13 @@ reviews.groupby('winery').apply(
 
 
 # 2. Pick best wine by country and province
-# Most points
-previous_most_points = reviews.groupby(['country', 'province']).apply(
-    lambda df: df.loc[df['points'].idxmax()], include_groups=False).points.sort_values(ascending=False)
+best_wine_country_provice = (
+    reviews
+    .groupby(['country', 'province'])
+    .apply(lambda df: df.loc[df['points'].idxmax()])
+    [['points', 'variety']]
+    .sort_values(by=['points'], ascending=False)
+)
 
 my_solution_most_points = reviews.groupby(['country', 'province'])[
     'points'].agg('max').sort_values(ascending=False)
@@ -558,4 +562,6 @@ highest_avg_points_winery_per_country = (
 # # correlation_price_points_per_country = reviews.groupby('country').apply(lambda df: df['price'].corr(df['points']), include_groups=False)
 
 
+# 2. Pick best wine by country and province
 print('\n')
+
