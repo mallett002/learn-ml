@@ -434,11 +434,12 @@ reviews.groupby('winery').apply(
     lambda df: df.title.iloc[0], include_groups=False)
 
 
+
 # 2. Pick best wine by country and province
 best_wine_country_provice = (
     reviews
     .groupby(['country', 'province'])
-    .apply(lambda df: df.loc[df['points'].idxmax()])
+    .apply(lambda df: df.loc[df['points'].idxmax()], include_groups=False)
     [['points', 'variety']]
     .sort_values(by=['points'], ascending=False)
 )
@@ -459,6 +460,21 @@ best_vals = reviews.loc[reviews.groupby(['country', 'province'])[
     'ratio'].idxmax().sort_values(ascending=False)]
 # print(reviews.loc[reviews.title == 'Nicosia 2013 Vulkà Bianco (Etna)'])
 
+# OR THIS:
+# highest ratio of points/price:
+def add_ratio(row):
+    row.ratio = row.points / row.price
+    return row
+
+
+reviews.apply(add_ratio, axis='columns')
+res = (
+    reviews
+    .groupby(['country', 'province'])
+    .apply(lambda df: df.loc[df['ratio'].idxmax()], include_groups=False)
+    .ratio
+    .sort_values(ascending=False)
+)
 
 # 4. Most common wine reviewers
 reviews.groupby('taster_twitter_handle').size().sort_values(ascending=False)
@@ -468,12 +484,20 @@ best_rating_per_price = reviews.groupby('price')['points'].max().sort_values()
 
 
 # 6. min and max prices for each variety of wine
-min_max_prices = reviews.groupby('variety')['price'].agg(
-    ['min', 'max']).sort_values(by=['min', 'max'])
+min_max_prices = (
+    reviews.groupby('variety')
+    ['price']
+    .agg(['min', 'max'])
+    .sort_values(by=['min', 'max'])
+)
 
 # 7. Most expensive wine varieties
-most_exp_varieties = reviews.groupby(
-    'variety')['price'].max().sort_values(ascending=False)
+most_exp_varieties = (
+    reviews.groupby('variety')
+    ['price']
+    .max()
+    .sort_values(ascending=False)
+)
 
 # 8. Average scores by reviewers
 reviews.groupby('taster_twitter_handle')['points'].mean()
@@ -492,11 +516,11 @@ most_reviewed_winery_per_country = reviews.groupby(
 reviews.groupby(['variety', 'province']).price.agg(
     'mean').sort_values(ascending=False)
 
-# 12. Group by 'taster_twitter_handle', calculate the mean points, and get the top 5 tasters
+# 12. Get top 5 reviewers (taster_twitter_handle) that give out the highest average points
 reviews.groupby('taster_twitter_handle')[
     'points'].mean().sort_values(ascending=False).head(5)
 
-# 13. Group by 'winery', find the wine with the highest price for each winery
+# 13. Find the wine with the highest price for each winery
 # print('mine:')
 highest_price_per_winery = reviews.groupby(
     'winery')['price'].max().sort_values(ascending=False)
@@ -562,6 +586,4 @@ highest_avg_points_winery_per_country = (
 # # correlation_price_points_per_country = reviews.groupby('country').apply(lambda df: df['price'].corr(df['points']), include_groups=False)
 
 
-# 2. Pick best wine by country and province
 print('\n')
-
