@@ -84,6 +84,7 @@ imputed_X_valid = pd.DataFrame(imputer.transform(X_valid))
 imputed_X_train.columns = X_train.columns
 imputed_X_valid.columns = X_valid.columns
 
+print(calc_mae(imputed_X_train, imputed_X_valid, y_train, y_valid))
 # Normally, imputation does better
 # This case, dropping columns did better
 # why? Only few values missing in ds, would think imputation would do better..

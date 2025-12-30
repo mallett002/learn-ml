@@ -33,6 +33,7 @@ X_train_full, X_valid_full, y_train, y_valid = train_test_split(X, y, train_size
 
 # Drop columns with missing values in training data (to keep things simple for setting up data for all 3 approaches)
 cols_with_missing = [col for col in X_train_full.columns if X_train_full[col].isnull().any()] 
+
 X_train_full.drop(cols_with_missing, axis=1, inplace=True)
 X_valid_full.drop(cols_with_missing, axis=1, inplace=True)
 
