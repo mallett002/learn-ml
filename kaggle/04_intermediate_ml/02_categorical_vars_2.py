@@ -76,7 +76,7 @@ good_label_cols = [
 ]
 
 # Problematic columns that will be dropped from the dataset:
-bad_label_cols = list(set(object_cols)-set(good_label_cols))
+bad_label_cols = list(set(object_cols) - set(good_label_cols))
 # {A, B, C} - {A} -> {B, C}
 
 # Drop categorical values that won't be encoded
@@ -93,3 +93,21 @@ label_X_valid[good_label_cols] = encoder.fit(X_valid[good_label_cols])
 # See MAE from ordinal encoding:
 print("MAE from Approach 2 (Ordinal Encoding):") 
 print(score_dataset(label_X_train, label_X_valid, y_train, y_valid))
+
+# ############################################
+# Investigating Cardinality
+# ############################################
+ # create list of the number of uniques ex [25, 8, 6]
+object_nunique = list(map(lambda col: X_train[col].nunique(), object_cols))
+
+# zip together object cols and the object_nunique (by position) and then put in dictionary for easy lookup:
+uniques_by_cols = dict(zip(object_cols, object_nunique))
+# ex:
+# {
+#   'Neighborhood': 25,
+#   'Style': 8,
+#   'RoofType': 6
+# }
+
+# sort them ascending:
+sorted(uniques_by_cols.items(), key=lambda x: x[1])
