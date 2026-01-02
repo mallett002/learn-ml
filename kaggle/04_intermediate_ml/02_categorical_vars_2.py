@@ -2,7 +2,7 @@ import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import OrdinalEncoder
+from sklearn.preprocessing import OrdinalEncoder, OneHotEncoder
 
 X = pd.read_csv('some/path/to/csv.csv', index_col='Id')
 X_test = pd.read_csv('some/other/path/to/csv.csv', index_col='Id')
@@ -111,3 +111,50 @@ uniques_by_cols = dict(zip(object_cols, object_nunique))
 
 # sort them ascending:
 sorted(uniques_by_cols.items(), key=lambda x: x[1])
+
+# High cardinality (ones with cardinality > ~10) should be dropped, or just use ordinal encoding. One hot encoding can greatly increase data size
+
+# Find cols that have low/high cardinality
+low_cardinality_cols = [
+    col
+    for col in object_cols
+    if X_train[col].nunique() < 10
+]
+
+high_cardinality_cols = list(set(object_cols) - set(low_cardinality_cols))
+
+# ############################################
+# Approach 3. One Hot Encoding
+# ############################################
+
+OH_encoder = OneHotEncoder(handle_unknown='ignore', sparse_output=False)
+
+OH_cols_train = pd.DataFrame(OH_encoder.fit_transform(X_train[low_cardinality_cols]))
+OH_cols_valid = pd.DataFrame(OH_encoder.transform(X_valid[low_cardinality_cols]))
+
+# Side note - AI said I can do this so we don't need to add back indexes, nor need to ensure all column names are strings down below as well:
+# OH_cols_train = pd.DataFrame(
+#     OH_encoder.fit_transform(X_train[low_cardinality_cols]),
+#     columns=OH_encoder.get_feature_names_out(low_cardinality_cols),
+#     index=X_train.index
+# )
+
+# One hot encoding removed the index; put it back
+OH_cols_train.index = X_train.index
+OH_cols_valid.index = X_valid.index
+
+# Remove categorical columns from data (will replace with one-hot encoding)
+num_X_train = X_train.drop(object_cols, axis=1)
+num_X_valid = X_valid.drop(object_cols, axis=1)
+
+# Combine hot encoded cols df with numerical cols df
+OH_X_train = pd.concat([num_X_train, OH_cols_train], axis=1)
+OH_X_valid = pd.concat([num_X_valid, OH_cols_valid], axis=1)
+
+# Ensure all column names have type string
+OH_X_train.columns = OH_X_train.columns.astype(str)
+OH_X_valid.columns = OH_X_valid.columns.astype(str)
+
+# See MAE from ordinal encoding:
+print("MAE from Approach 3 (One-Hot Encoding):") 
+print(score_dataset(OH_X_train, OH_X_valid, y_train, y_valid))
