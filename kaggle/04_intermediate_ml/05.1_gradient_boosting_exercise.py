@@ -24,11 +24,15 @@ X_train_full, X_valid_full, y_train, y_valid = train_test_split(
 # "Cardinality" means the number of unique values in a column
 # Select categorical columns with relatively low cardinality (convenient but arbitrary)
 low_cardinality_cols = [
-    cname for cname in X_train_full.columns if X_train_full[cname].nunique() < 10 and 
-                        X_train_full[cname].dtype == "object"]
+    cname for cname in X_train_full.columns
+    if X_train_full[cname].nunique() < 10 and 
+        X_train_full[cname].dtype == "object"
+]
 
 # Select numeric columns
-numeric_cols = [cname for cname in X_train_full.columns if X_train_full[cname].dtype in ['int64', 'float64']]
+numeric_cols = [
+    cname for cname in X_train_full.columns 
+    if X_train_full[cname].dtype in ['int64', 'float64']]
 
 # Keep selected columns only
 my_cols = low_cardinality_cols + numeric_cols
@@ -68,9 +72,12 @@ print("Mean Absolute Error:" , mae_1) # Mean Absolute Error: 18161.82412510702
 #########################################################
 # Parameter tuning (n_estimators and early_stopping_rounds)
 my_model_2 = XGBRegressor(n_estimators=1000, learning_rate=0.05, early_stopping_rounds=5)
-my_model_2.fit(X_train, y_train,
-             eval_set=[(X_valid, y_valid)],
-             early_stopping_rounds=5)
+
+my_model_2.fit(
+    X_train, y_train,
+    eval_set=[(X_valid, y_valid)],
+    early_stopping_rounds=5
+)
 
 predictions_2 = my_model_2.predict(X_valid)
 
